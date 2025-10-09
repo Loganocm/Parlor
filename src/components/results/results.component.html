@@ -1,0 +1,112 @@
+<div class="results-container" *ngIf="restaurants.length > 0">
+  <h2 class="results-title">Found {{ restaurants.length }} Pizza Places</h2>
+
+  <div class="results-grid">
+    <div
+      *ngFor="let restaurant of restaurants"
+      class="restaurant-card"
+      (click)="selectRestaurant(restaurant)"
+    >
+      <div class="card-header">
+        <h3 class="restaurant-name">{{ restaurant.name }}</h3>
+        <span class="price">{{ getPriceSymbol(restaurant.priceLevel) }}</span>
+      </div>
+
+      <div class="rating">
+        <span class="stars">{{ getStars(restaurant.rating) }}</span>
+        <span class="rating-value">{{ restaurant.rating.toFixed(1) }}</span>
+      </div>
+
+      <p class="address">📍 {{ restaurant.address }}</p>
+      <p class="distance">{{ restaurant.distance.toFixed(1) }} miles away</p>
+
+      <div class="cuisine-tags">
+        <span *ngFor="let cuisine of restaurant.cuisine" class="tag">
+          {{ cuisine }}
+        </span>
+      </div>
+
+      <div class="status" *ngIf="restaurant.openNow !== undefined">
+        <span [class.open]="restaurant.openNow" [class.closed]="!restaurant.openNow">
+          {{ restaurant.openNow ? '🟢 Open Now' : '🔴 Closed' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="no-results" *ngIf="restaurants.length === 0">
+  <p>No results yet. Try searching for pizza places near you!</p>
+</div>
+
+<div class="modal-overlay" *ngIf="selectedRestaurant" (click)="closeDetails()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeDetails()">✕</button>
+
+    <h2>{{ selectedRestaurant.name }}</h2>
+
+    <div class="details-grid">
+      <div class="detail-item">
+        <strong>Rating:</strong>
+        <span>{{ getStars(selectedRestaurant.rating) }} {{ selectedRestaurant.rating.toFixed(1) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <strong>Price:</strong>
+        <span>{{ getPriceSymbol(selectedRestaurant.priceLevel) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <strong>Distance:</strong>
+        <span>{{ selectedRestaurant.distance.toFixed(1) }} miles</span>
+      </div>
+
+      <div class="detail-item" *ngIf="selectedRestaurant.phone">
+        <strong>Phone:</strong>
+        <a [href]="'tel:' + selectedRestaurant.phone">{{ selectedRestaurant.phone }}</a>
+      </div>
+
+      <div class="detail-item full-width">
+        <strong>Address:</strong>
+        <span>{{ selectedRestaurant.address }}</span>
+      </div>
+
+      <div class="detail-item full-width" *ngIf="selectedRestaurant.website">
+        <strong>Website:</strong>
+        <a [href]="selectedRestaurant.website" target="_blank">Visit Website</a>
+      </div>
+    </div>
+
+    <div class="ai-summary-section">
+      <h3>🤖 AI-Powered Insights</h3>
+
+      <div *ngIf="loadingSummary" class="loading">
+        <p>Generating personalized summary...</p>
+      </div>
+
+      <div *ngIf="aiSummary && !loadingSummary" class="ai-content">
+        <div class="summary">
+          <p>{{ aiSummary.summary }}</p>
+        </div>
+
+        <div class="highlights" *ngIf="aiSummary.highlights.length > 0">
+          <h4>Highlights</h4>
+          <ul>
+            <li *ngFor="let highlight of aiSummary.highlights">{{ highlight }}</li>
+          </ul>
+        </div>
+
+        <div class="recommendations" *ngIf="aiSummary.recommendations.length > 0">
+          <h4>Recommendations</h4>
+          <ul>
+            <li *ngFor="let rec of aiSummary.recommendations">{{ rec }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div *ngIf="!loadingSummary && !aiSummary" class="error">
+        <p>Unable to load AI summary at this time.</p>
+      </div>
+    </div>
+  </div>
+</div>

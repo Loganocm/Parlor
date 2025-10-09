@@ -1,0 +1,279 @@
+.results-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.results-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.restaurant-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 0.75rem;
+}
+
+.restaurant-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  flex: 1;
+}
+
+.price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #27ae60;
+  margin-left: 0.5rem;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.stars {
+  font-size: 1rem;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.address,
+.distance {
+  color: #7f8c8d;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.cuisine-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tag {
+  padding: 0.25rem 0.75rem;
+  background-color: #ecf0f1;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: #2c3e50;
+}
+
+.status {
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+.status .open {
+  color: #27ae60;
+}
+
+.status .closed {
+  color: #e74c3c;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: #7f8c8d;
+  font-size: 1.2rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #7f8c8d;
+  transition: color 0.3s;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #2c3e50;
+}
+
+.modal-content h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  padding-right: 2rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-item strong {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.detail-item a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.detail-item a:hover {
+  text-decoration: underline;
+}
+
+.ai-summary-section {
+  border-top: 2px solid #ecf0f1;
+  padding-top: 1.5rem;
+}
+
+.ai-summary-section h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+}
+
+.ai-content {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.summary {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: #2c3e50;
+}
+
+.highlights,
+.recommendations {
+  margin-top: 1rem;
+}
+
+.highlights h4,
+.recommendations h4 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.highlights ul,
+.recommendations ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.highlights li,
+.recommendations li {
+  margin: 0.5rem 0;
+  color: #34495e;
+  line-height: 1.5;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+  .results-container {
+    padding: 0 1rem;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
