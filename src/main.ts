@@ -31,10 +31,10 @@ export class App {
 
   handleSearch(searchRequest: SearchRequest) {
     this.apiService.searchRestaurants(searchRequest).subscribe({
-      next: (results) => {
+      next: (results: Restaurant[]) => {
         this.restaurants = results;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error fetching restaurants:', error);
         this.restaurants = [];
       }
