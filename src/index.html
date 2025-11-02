@@ -5,6 +5,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/">
+    <script>
+      function initGoogleMaps() {
+        window.googleMapsLoaded = true;
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwepkX10RtWqYPb-IeS9TMevllIqIECSA&libraries=places&loading=async&callback=initGoogleMaps" async defer></script>
+    <style>
+      /* Ensure autocomplete appears on top */
+      .pac-container {
+        z-index: 10000;
+      }
+    </style>
   </head>
   <body>
     <app-root>Loading...</app-root>

@@ -71,17 +71,53 @@ export class SearchComponent implements AfterViewInit {
       this.placePickerContainer.nativeElement.appendChild(this.placeAutocompleteElement);
       
       console.log('✅ PlaceAutocompleteElement created and appended');
+      console.log('📋 Element type:', this.placeAutocompleteElement.constructor.name);
+      console.log('📋 Element tag:', this.placeAutocompleteElement.tagName);
+      console.log('📋 Element:', this.placeAutocompleteElement);
       
-      // Listen for place selection - CORRECT event is 'gmp-select' not 'gmp-placeselect'
-      // The event provides 'placePrediction' which must be converted to a place with .toPlace()
-      this.placeAutocompleteElement.addEventListener('gmp-select', async ({ placePrediction }: any) => {
-        console.log('🎯 gmp-select EVENT FIRED!');
+      // Check for the 'place' property which should be set after selection
+      console.log('📋 Has place property?', 'place' in this.placeAutocompleteElement);
+      
+      // NOTE: PlaceAutocompleteElement does NOT expose its internal input
+      // We can only get place data via the 'gmp-placeselect' event
+      // Users MUST select from the autocomplete dropdown
+      
+      // DEBUG: Listen for ALL possible events to see what's firing
+      const eventsToTest = [
+        'gmp-placeselect', 
+        'place-changed',
+        'placechanged',
+        'change', 
+        'select',
+        'autocomplete-select'
+      ];
+      
+      eventsToTest.forEach(eventName => {
+        this.placeAutocompleteElement.addEventListener(eventName, (e: any) => {
+          console.log(`🔔 EVENT DETECTED: ${eventName}`, e);
+        });
+      });
+      
+      // Also try using the 'place' property with input event
+      this.placeAutocompleteElement.addEventListener('input', (e: any) => {
+        if (this.placeAutocompleteElement.place) {
+          console.log('✅ PLACE PROPERTY SET ON INPUT!', this.placeAutocompleteElement.place);
+        }
+      });
+      
+      // Listen for place selection - trying both possible event names
+      this.placeAutocompleteElement.addEventListener('gmp-placeselect', async (event: any) => {
+        console.log('🎯 gmp-placeselect EVENT FIRED!', event);
         
-        // Convert prediction to place object
-        const place = placePrediction.toPlace();
-        console.log('📦 Step 1: Place object created from prediction:', place);
+        const place = event.place;
+        console.log('📦 Step 1: Place object extracted from event:', place);
+        
+        if (!place) {
+          console.error('❌ No place in event');
+          return;
+        }
 
-        console.log('🔄 Step 2: Fetching place fields...');
+        console.log('� Step 2: Fetching place fields...');
         // Fetch the fields we need
         await place.fetchFields({
           fields: ['displayName', 'formattedAddress', 'location']

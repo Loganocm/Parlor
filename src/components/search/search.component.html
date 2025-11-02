@@ -1,34 +1,31 @@
 <div class="search-container">
-  <h1 class="title">🍕 PizzaPicker</h1>
-  <p class="subtitle">Find the perfect pizza near you</p>
+  <div class="header-wrapper">
+    <h1 class="title">🍕 Parlor</h1>
+  </div>
 
   <div class="search-wrapper">
     <div class="search-bar">
-      <div class="search-section location-section">
+            <div class="search-section location-section">
         <div class="section-icon">📍</div>
         <div class="section-content">
-          <input
-            type="text"
-            [(ngModel)]="address"
-            placeholder="Enter delivery address"
-            class="search-input"
-            (keyup.enter)="searchByAddress()"
-          />
+          <label class="section-label">Where to?</label>
+          <div #placePickerContainer class="place-picker-container"></div>
         </div>
       </div>
 
       <div class="divider"></div>
 
+      <div class="divider"></div>
+
       <div class="search-section distance-section">
-        <div class="section-icon">📏</div>
         <div class="section-content">
           <label class="section-label">Distance</label>
           <select [(ngModel)]="preferences.maxDistance" class="search-select">
-            <option [value]="5">5 mi</option>
-            <option [value]="10">10 mi</option>
-            <option [value]="15">15 mi</option>
-            <option [value]="25">25 mi</option>
-            <option [value]="50">50 mi</option>
+            <option [value]="5">5 miles</option>
+            <option [value]="10">10 miles</option>
+            <option [value]="15">15 miles</option>
+            <option [value]="25">25 miles</option>
+            <option [value]="50">50 miles</option>
           </select>
         </div>
       </div>
@@ -36,7 +33,6 @@
       <div class="divider"></div>
 
       <div class="search-section dietary-section">
-        <div class="section-icon">🥗</div>
         <div class="section-content">
           <label class="section-label">Dietary</label>
           <button class="filter-dropdown" (click)="toggleDietaryDropdown()">
@@ -51,7 +47,7 @@
     </div>
 
     <button class="current-location-link" (click)="useCurrentLocation()" [disabled]="loading">
-      📍 Use current location
+      <span class="location-icon">📍</span> Use My Location
     </button>
   </div>
 

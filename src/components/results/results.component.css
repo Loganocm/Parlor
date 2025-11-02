@@ -1,106 +1,442 @@
 .results-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 2rem auto;
   padding: 0 2rem;
 }
 
 .results-title {
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   color: #2c3e50;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
 }
 
-.results-grid {
+/* RPG Card Deck Styles */
+.cards-deck {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+  perspective: 1000px;
 }
 
-.restaurant-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) rotateX(-15deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+.rpg-card {
+  position: relative;
   cursor: pointer;
-  transition: all 0.3s;
+  animation: cardEntrance 0.6s ease-out forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
 
-.restaurant-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+.rpg-card:hover {
+  transform: translateY(-15px) scale(1.05);
 }
 
-.card-header {
+.card-border {
+  background: linear-gradient(145deg, #f4e4c1, #e8d4a0);
+  border-radius: 20px;
+  padding: 4px;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 215, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.rpg-card:hover .card-shine {
+  animation: shine 1.5s infinite;
+}
+
+@keyframes shine {
+  0% {
+    transform: rotate(45deg) translateY(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateY(100%);
+  }
+}
+
+.card-content {
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: #f5f5f5;
+  position: relative;
+  min-height: 500px;
   display: flex;
-  justify-content: space-between;
-  align-items: start;
-  margin-bottom: 0.75rem;
+  flex-direction: column;
 }
 
-.restaurant-name {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin: 0;
-  flex: 1;
+.card-rank {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1a2e;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.price {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #27ae60;
-  margin-left: 0.5rem;
-}
-
-.rating {
+.card-image {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border-radius: 12px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: imageShine 3s infinite;
+}
+
+@keyframes imageShine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.pizza-icon {
+  font-size: 5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffd700;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.3;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
 }
 
-.stars {
+.stat-label {
+  font-size: 0.7rem;
+  color: #95a5a6;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.stat-value {
   font-size: 1rem;
+  color: #ffd700;
+  font-weight: 700;
 }
 
-.rating-value {
+/* Contact Section - Tactile and Functional */
+.card-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 150, 255, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 150, 255, 0.2);
+}
+
+.contact-item {
+  width: 100%;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
   font-weight: 600;
-  color: #2c3e50;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.address,
-.distance {
-  color: #7f8c8d;
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
+.contact-link:hover {
+  background: linear-gradient(135deg, #5dade2, #3498db);
+  transform: translateX(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.cuisine-tags {
+.contact-icon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+}
+
+.contact-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-description {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.card-address {
+  color: #bdc3c7;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
-.tag {
-  padding: 0.25rem 0.75rem;
-  background-color: #ecf0f1;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  color: #2c3e50;
+.card-tag {
+  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.status {
-  margin-top: 0.75rem;
+.card-status {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.status-open,
+.status-closed {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.status-open {
+  background: linear-gradient(135deg, #27ae60, #229954);
+  color: white;
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+}
+
+.status-closed {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+}
+
+.card-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  text-align: center;
+}
+
+.card-action {
+  color: #95a5a6;
+  font-size: 0.8rem;
   font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-.status .open {
-  color: #27ae60;
+/* Reroll Button Section */
+.reroll-section {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
 }
 
-.status .closed {
-  color: #e74c3c;
+.reroll-button {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem 3rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  cursor: pointer;
+  box-shadow: 
+    0 8px 20px rgba(155, 89, 182, 0.4),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.reroll-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.reroll-button:hover::before {
+  left: 100%;
+}
+
+.reroll-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 12px 30px rgba(155, 89, 182, 0.6),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.reroll-button:active {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 15px rgba(155, 89, 182, 0.4),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.reroll-button:disabled {
+  background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.reroll-icon {
+  font-size: 1.5rem;
+  animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.reroll-button:disabled .reroll-icon {
+  animation: none;
+}
+
+.reroll-text {
+  font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .cards-deck {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .results-container {
+    padding: 0 1rem;
+  }
+
+  .cards-deck {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .results-title {
+    font-size: 2rem;
+  }
+
+  .reroll-button {
+    padding: 1.2rem 2rem;
+    font-size: 1rem;
+  }
+
+  .reroll-text {
+    font-size: 1rem;
+  }
 }
 
 .no-results {

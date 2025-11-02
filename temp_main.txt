@@ -91,6 +91,9 @@ export class App {
   restaurants: Restaurant[] = [];
   lastSearchRequest: SearchRequest | null = null;
   loading: boolean = false;
+  sessionId: string = '';
+  hasMore: boolean = false;
+  totalCandidates: number = 0;
 
   constructor(private apiService: ApiService) {}
 
@@ -100,9 +103,13 @@ export class App {
     this.restaurants = []; // Clear previous results
     
     this.apiService.getPizzaRecommendations(searchRequest).subscribe({
-      next: (results: Restaurant[]) => {
-        this.restaurants = results;
+      next: (response: RecommendationResponse) => {
+        this.restaurants = response.restaurants;
+        this.sessionId = response.sessionId;
+        this.hasMore = response.hasMore;
+        this.totalCandidates = response.totalCandidates;
         this.loading = false;
+        console.log(`Received ${response.restaurants.length} restaurants, hasMore: ${response.hasMore}, total: ${response.totalCandidates}`);
       },
       error: (error: any) => {
         console.error('Error fetching restaurants:', error);
@@ -117,4 +124,5 @@ export class App {
 bootstrapApplication(App, {
   providers: [provideHttpClient()]
 });
+
 

@@ -1,37 +1,84 @@
 <div class="results-container" *ngIf="restaurants.length > 0">
-  <h2 class="results-title">Found {{ restaurants.length }} Pizza Places</h2>
+  <h2 class="results-title">🎴 Choose Your Pizza Adventure</h2>
 
-  <div class="results-grid">
+  <div class="cards-deck">
     <div
-      *ngFor="let restaurant of restaurants"
-      class="restaurant-card"
+      *ngFor="let restaurant of restaurants; let i = index"
+      class="rpg-card"
       (click)="selectRestaurant(restaurant)"
+      [style.animation-delay]="i * 0.1 + 's'"
     >
-      <div class="card-header">
-        <h3 class="restaurant-name">{{ restaurant.name }}</h3>
-        <span class="price">{{ getPriceSymbol(restaurant.priceLevel) }}</span>
-      </div>
+      <div class="card-shine"></div>
+      <div class="card-border">
+        <div class="card-content">
+          <div class="card-rank">★ {{ i + 1 }} ★</div>
+          
+          <div class="card-image">
+            <div class="pizza-icon">🍕</div>
+          </div>
+          
+          <h3 class="card-title">{{ restaurant.name }}</h3>
+          
+          <div class="card-stats">
+            <div class="stat">
+              <span class="stat-label">⭐ RATING</span>
+              <span class="stat-value">{{ restaurant.rating.toFixed(1) }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">💰 PRICE</span>
+              <span class="stat-value">{{ getPriceSymbol(restaurant.priceLevel) }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">📍 DISTANCE</span>
+              <span class="stat-value">{{ restaurant.distance.toFixed(1) }} mi</span>
+            </div>
+          </div>
 
-      <div class="rating">
-        <span class="stars">{{ getStars(restaurant.rating) }}</span>
-        <span class="rating-value">{{ restaurant.rating.toFixed(1) }}</span>
-      </div>
+          <div class="card-contact">
+            <div class="contact-item" *ngIf="restaurant.phone">
+              <a [href]="'tel:' + restaurant.phone" class="contact-link" (click)="$event.stopPropagation()">
+                <span class="contact-icon">📞</span>
+                <span class="contact-text">{{ restaurant.phone }}</span>
+              </a>
+            </div>
+            <div class="contact-item" *ngIf="restaurant.website">
+              <a [href]="restaurant.website" target="_blank" class="contact-link" (click)="$event.stopPropagation()">
+                <span class="contact-icon">🌐</span>
+                <span class="contact-text">Visit Website</span>
+              </a>
+            </div>
+          </div>
 
-      <p class="address">📍 {{ restaurant.address }}</p>
-      <p class="distance">{{ restaurant.distance.toFixed(1) }} miles away</p>
+          <div class="card-description">
+            <p class="card-address">📍 {{ restaurant.address }}</p>
+          </div>
 
-      <div class="cuisine-tags">
-        <span *ngFor="let cuisine of restaurant.cuisine" class="tag">
-          {{ cuisine }}
-        </span>
-      </div>
+          <div class="card-tags">
+            <span *ngFor="let cuisine of restaurant.cuisine" class="card-tag">
+              {{ cuisine }}
+            </span>
+          </div>
 
-      <div class="status" *ngIf="restaurant.openNow !== undefined">
-        <span [class.open]="restaurant.openNow" [class.closed]="!restaurant.openNow">
-          {{ restaurant.openNow ? '🟢 Open Now' : '🔴 Closed' }}
-        </span>
+          <div class="card-status" *ngIf="restaurant.openNow !== undefined">
+            <span [class.status-open]="restaurant.openNow" [class.status-closed]="!restaurant.openNow">
+              {{ restaurant.openNow ? '🟢 READY' : '🔴 RESTING' }}
+            </span>
+          </div>
+
+          <div class="card-footer">
+            <span class="card-action">CLICK TO VIEW DETAILS</span>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+
+  <div class="reroll-section">
+    <button class="reroll-button" (click)="rerollRecommendations()" [disabled]="loading">
+      <span class="reroll-icon">🎲</span>
+      <span class="reroll-text">{{ loading ? 'ROLLING...' : 'REROLL DECK' }}</span>
+      <span class="reroll-icon">🎲</span>
+    </button>
   </div>
 </div>
 

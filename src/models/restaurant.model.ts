@@ -34,6 +34,8 @@ export interface SearchRequest {
   latitude?: number;
   longitude?: number;
   preferences?: UserPreferences;
+  offset?: number;
+  sessionId?: string;
 }
 
 export interface AIGeneratedSummary {

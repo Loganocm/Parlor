@@ -1,4 +1,67 @@
 .angular
 dist
 node_modules
+backend/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Environment files - NEVER commit these!
 .env
+.env.local
+.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+.tox/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Deployment
+*.pem
+*.key
+*.crt
+
+# AWS
+.aws/
+
+# Documentation (keep README)
+# *.md
+# !README.md
+DEPLOYMENT_CHECKLIST_FRONTEND.md
+FRONTEND_DEPLOYMENT_GUIDE.md
+FRONTEND_BACKEND_INTEGRATION.md
+FRONTEND_QUICKSTART.md
+PROJECT_SUMMARY.md
+QUICKSTART.md
+README.md
+start-backend.ps1

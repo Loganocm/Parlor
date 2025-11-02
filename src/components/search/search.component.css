@@ -1,65 +1,103 @@
 .search-container {
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
-  position: relative;
+  padding: 3rem 2rem;
+  position: static;
+}
+
+.header-wrapper {
+  text-align: center;
+  margin-bottom: 2.5rem;
 }
 
 .title {
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 3.5rem;
+  font-weight: 800;
   text-align: center;
-  margin-bottom: 0.5rem;
-  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #d84315 0%, #ff6f00 50%, #d84315 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 10px rgba(216, 67, 21, 0.2);
+  letter-spacing: -1px;
 }
 
 .subtitle {
   text-align: center;
-  font-size: 1.2rem;
-  color: #7f8c8d;
-  margin-bottom: calc(2rem - 10px);
+  font-size: 1.3rem;
+  color: #5d4037;
+  margin: 0;
+  font-weight: 500;
+  font-style: italic;
 }
 
 .search-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: center;
+  position: static;
 }
 
 .search-bar {
   display: flex;
   align-items: center;
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 50px;
-  padding: 0.5rem;
+  background: linear-gradient(145deg, #ffffff 0%, #fff8f0 100%);
+  border: 3px solid #ffccbc;
+  border-radius: 60px;
+  padding: 0.75rem 1rem;
   width: 100%;
   max-width: 850px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  box-shadow: 
+    0 8px 32px rgba(216, 67, 21, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: static;
+}
+
+.search-bar::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(135deg, #ff6f00, #d84315, #ff6f00);
+  border-radius: 60px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
 .search-bar:hover {
-  border-color: #c0c0c0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 48px rgba(216, 67, 21, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .search-bar:focus-within {
-  border-color: #e74c3c;
-  box-shadow: 0 4px 20px rgba(231, 76, 60, 0.2);
+  border-color: #ff6f00;
+  box-shadow: 
+    0 12px 48px rgba(255, 111, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 0 4px rgba(255, 111, 0, 0.1);
 }
 
 .search-section {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: calc(0.5rem - 10px) 1rem;
+  gap: 0.875rem;
+  padding: 0.5rem 1rem;
 }
 
 .location-section {
   flex: 1;
   min-width: 0;
+  position: static;
 }
 
 .location-section .section-content {
@@ -69,11 +107,13 @@
 .distance-section,
 .dietary-section {
   flex-shrink: 0;
+  min-width: 120px;
 }
 
 .section-icon {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .section-content {
@@ -84,112 +124,182 @@
 }
 
 .section-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #6c757d;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #8d6e63;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 }
 
 .search-input {
   border: none;
   outline: none;
-  font-size: 1rem;
-  color: #2c3e50;
+  font-size: 1.05rem;
+  color: #3e2723;
   background: transparent;
+  width: 100%;
+  min-width: 0;
+  font-weight: 500;
+  position: static;
+}
+
+/* Style container for PlaceAutocompleteElement */
+.place-picker-container {
   width: 100%;
   min-width: 0;
 }
 
+/* Style for Google PlaceAutocompleteElement */
+gmp-place-autocomplete {
+  border: none;
+  outline: none;
+  font-size: 1.05rem;
+  background: transparent;
+  width: 100%;
+  min-width: 0;
+  font-weight: 500;
+  display: block;
+}
+
 .search-input::placeholder {
-  color: #95a5a6;
+  color: #bcaaa4;
+  font-weight: 400;
 }
 
 .search-select {
   border: none;
   outline: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3e2723;
   background: transparent;
   cursor: pointer;
   padding: 0.25rem 0;
+}
+
+.search-select:hover {
+  color: #d84315;
 }
 
 .filter-dropdown {
   border: none;
   outline: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3e2723;
   background: transparent;
   cursor: pointer;
   padding: 0.25rem 0;
   text-align: left;
+  transition: color 0.2s ease;
 }
 
 .filter-dropdown:hover {
-  color: #e74c3c;
+  color: #d84315;
 }
 
 .divider {
-  width: 1px;
-  height: 32px;
-  background-color: #e0e0e0;
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, #ffccbc 20%, #ffccbc 80%, transparent);
   flex-shrink: 0;
 }
 
 .search-action-btn {
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  background: linear-gradient(135deg, #ff6f00 0%, #d84315 100%);
   border: none;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
+  box-shadow: 
+    0 4px 12px rgba(216, 67, 21, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.search-action-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.search-action-btn:hover:not(:disabled)::before {
+  width: 100px;
+  height: 100px;
 }
 
 .search-action-btn:hover:not(:disabled) {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+  transform: scale(1.08) rotate(5deg);
+  box-shadow: 
+    0 6px 20px rgba(216, 67, 21, 0.5),
+    0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
 .search-action-btn:active:not(:disabled) {
-  transform: scale(0.95);
+  transform: scale(0.95) rotate(0deg);
 }
 
 .search-action-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .search-icon {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  position: relative;
+  z-index: 1;
 }
 
 .current-location-link {
-  background: transparent;
-  border: none;
-  color: #3498db;
-  font-size: 0.95rem;
-  font-weight: 600;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 2px solid #ffccbc;
+  color: #d84315;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  transition: all 0.2s;
+  padding: 0.75rem 1.75rem;
+  border-radius: 30px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(216, 67, 21, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .current-location-link:hover:not(:disabled) {
-  color: #2980b9;
-  text-decoration: underline;
+  background: linear-gradient(135deg, #ffe0b2 0%, #ffccbc 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(216, 67, 21, 0.25);
+  border-color: #ff6f00;
+}
+
+.current-location-link:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .current-location-link:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.location-icon {
+  font-size: 1.1rem;
 }
 
 .dietary-dropdown {
@@ -199,22 +309,25 @@
   left: 0;
   margin: 0.5rem auto;
   max-width: 400px;
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(145deg, #ffffff 0%, #fff8f0 100%);
+  border: 3px solid #ffccbc;
+  border-radius: 20px;
+  box-shadow: 
+    0 12px 48px rgba(216, 67, 21, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  animation: slideDown 0.2s ease-out;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-20px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -222,26 +335,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #ff6f00 0%, #d84315 100%);
+  border-bottom: none;
 }
 
 .dropdown-header h4 {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .close-dropdown {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   font-size: 1.5rem;
-  color: #95a5a6;
+  color: #ffffff;
   cursor: pointer;
   padding: 0;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -250,62 +365,67 @@
 }
 
 .close-dropdown:hover {
-  background: #f8f9fa;
-  color: #2c3e50;
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
 }
 
 .dietary-options {
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .dietary-checkbox {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.875rem;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: background-color 0.2s;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  transition: all 0.2s;
+  border: 2px solid transparent;
 }
 
 .dietary-checkbox:hover {
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border-color: #ffccbc;
+  transform: translateX(4px);
 }
 
 .dietary-checkbox input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   cursor: pointer;
-  accent-color: #27ae60;
+  accent-color: #ff6f00;
+  border-radius: 4px;
 }
 
 .dietary-checkbox span {
-  font-size: 0.95rem;
-  color: #2c3e50;
+  font-size: 1rem;
+  color: #3e2723;
+  font-weight: 500;
   user-select: none;
 }
 
 @media (max-width: 768px) {
   .search-container {
-    padding: 1rem;
+    padding: 2rem 1rem;
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
   .subtitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .search-bar {
     flex-direction: column;
-    border-radius: 16px;
-    padding: 1rem;
-    gap: 1rem;
+    border-radius: 24px;
+    padding: 1.5rem;
+    gap: 1.25rem;
   }
 
   .search-section {
@@ -315,7 +435,7 @@
 
   .location-section {
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 2px solid #ffccbc;
   }
 
   .divider {
@@ -325,12 +445,13 @@
   .distance-section,
   .dietary-section {
     width: 100%;
+    min-width: auto;
   }
 
   .search-action-btn {
     width: 100%;
-    border-radius: 12px;
-    height: 48px;
+    border-radius: 16px;
+    height: 56px;
   }
 
   .dietary-dropdown {

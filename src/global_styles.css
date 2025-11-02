@@ -26,3 +26,54 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Force dark text in Google Places Autocomplete - try all variations */
+gmp-place-autocomplete {
+  color: black !important;
+  caret-color: black !important;
+  background-color: white !important;
+  color-scheme: light !important;
+}
+
+gmp-place-autocomplete * {
+  color: black !important;
+  caret-color: black !important;
+  background-color: white !important;
+  color-scheme: light !important;
+}
+
+gmp-place-autocomplete input {
+  color: black !important;
+  caret-color: black !important;
+  -webkit-text-fill-color: black !important;
+  background-color: transparent !important;
+}
+
+gmp-place-autocomplete::part(input) {
+  color: black !important;
+  caret-color: black !important;
+  -webkit-text-fill-color: black !important;
+  background-color: transparent !important;
+}
+
+/* Override the shadow DOM input styling */
+gmp-place-autocomplete::shadow input {
+  color: black !important;
+  -webkit-text-fill-color: black !important;
+  background-color: transparent !important;
+}
+
+/* Fix dropdown background to be white */
+gmp-place-autocomplete::part(dropdown),
+gmp-place-autocomplete::part(list),
+gmp-place-autocomplete::part(item) {
+  background-color: white !important;
+  color: black !important;
+}
+
+/* Target the dropdown class directly */
+gmp-place-autocomplete .dropdown,
+gmp-place-autocomplete::shadow .dropdown {
+  background-color: white !important;
+  color-scheme: light !important;
+}

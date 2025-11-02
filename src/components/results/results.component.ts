@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Restaurant, AIGeneratedSummary } from '../../models/restaurant.model';
+import { Restaurant, AIGeneratedSummary, SearchRequest } from '../../models/restaurant.model';
 import { ApiService } from '../../services/api.service';
 
 @Component({
@@ -12,9 +12,13 @@ import { ApiService } from '../../services/api.service';
 })
 export class ResultsComponent {
   @Input() restaurants: Restaurant[] = [];
+  @Input() lastSearchRequest: SearchRequest | null = null;
+  @Output() onReroll = new EventEmitter<SearchRequest>();
+  
   selectedRestaurant: Restaurant | null = null;
   aiSummary: AIGeneratedSummary | null = null;
   loadingSummary: boolean = false;
+  loading: boolean = false;
 
   constructor(private apiService: ApiService) {}
 
@@ -54,5 +58,14 @@ export class ResultsComponent {
     let stars = '⭐'.repeat(fullStars);
     if (hasHalfStar) stars += '✨';
     return stars;
+  }
+
+  rerollRecommendations() {
+    if (this.lastSearchRequest && !this.loading) {
+      this.loading = true;
+      this.onReroll.emit(this.lastSearchRequest);
+      // Reset loading after a delay (will be set by parent component)
+      setTimeout(() => this.loading = false, 2000);
+    }
   }
 }
