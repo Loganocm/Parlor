@@ -2,5 +2,5 @@
 export const environment = {
   production: true,
   // Cloudflare Tunnel HTTPS to deployed EC2 backend
-  apiUrl: 'https://portal-gerald-loads-rank.trycloudflare.com/api'
+  apiUrl: 'https://packaging-competitions-sir-previous.trycloudflare.com/api'
 };
