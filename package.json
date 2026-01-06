@@ -3,9 +3,8 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "config-env": "node set-env.js",
-    "start": "npm run config-env && ng serve",
-    "build": "npm run config-env && ng build --configuration production"
+    "start": "ng serve",
+    "build": "ng build --configuration production"
   },
   "dependencies": {
     "@angular/animations": "^20.0.0",
