@@ -15,7 +15,17 @@ import { catchError, map } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, SearchComponent, ResultsComponent],
   template: `
-    <div class="app-container">
+    <!-- Landing Page -->
+    <div class="landing-container" *ngIf="!started">
+      <div class="landing-content">
+        <h1>🍕 Parlor</h1>
+        <p>Your AI-powered Pizza Finder</p>
+        <button (click)="started = true" class="start-btn">Start</button>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" *ngIf="started">
       <app-search (onSearch)="handleSearch($event)"></app-search>
       
       <div class="loading-overlay" *ngIf="loading">
@@ -33,6 +43,46 @@ import { catchError, map } from 'rxjs/operators';
     </div>
   `,
   styles: [`
+    /* Landing Page Styles */
+    .landing-container {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .landing-content h1 {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .landing-content p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .start-btn {
+      padding: 1rem 3rem;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 50px;
+      background: white;
+      color: #FF6B6B;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
     .app-container {
       min-height: 100vh;
       display: flex;
@@ -92,6 +142,7 @@ import { catchError, map } from 'rxjs/operators';
   `]
 })
 export class App {
+  started: boolean = false;
   restaurants: Restaurant[] = [];
   lastSearchRequest: SearchRequest | null = null;
   loading: boolean = false;

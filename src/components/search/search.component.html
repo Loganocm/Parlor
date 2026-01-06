@@ -40,14 +40,16 @@
 
       <div class="search-section distance-section">
         <div class="section-content">
-          <label class="section-label">Distance</label>
-          <select [(ngModel)]="preferences.maxDistance" class="search-select">
-            <option [value]="5">5 miles</option>
-            <option [value]="10">10 miles</option>
-            <option [value]="15">15 miles</option>
-            <option [value]="25">25 miles</option>
-            <option [value]="50">50 miles</option>
-          </select>
+          <label class="section-label">Distance (mi)</label>
+          <input 
+            type="number" 
+            min="1" 
+            max="50" 
+            [(ngModel)]="preferences.maxDistance" 
+            (keydown.enter)="validateDistance($event)"
+            (blur)="validateDistance(null)"
+            class="search-input distance-input"
+          >
         </div>
       </div>
 

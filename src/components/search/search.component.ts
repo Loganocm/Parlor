@@ -49,6 +49,20 @@ export class SearchComponent implements AfterViewInit, OnInit, OnDestroy {
     return this.preferences.dietaryRestrictions.length;
   }
 
+  validateDistance(event: any) {
+    if (event) {
+      event.target.blur(); // Remove focus when Enter is pressed
+    }
+    
+    // Clamp the value between 1 and 50
+    let dist = this.preferences.maxDistance;
+    if (!dist || dist < 1) dist = 1;
+    if (dist > 50) dist = 50;
+    
+    this.preferences.maxDistance = dist;
+    console.log('✅ Distance validated and set to:', dist);
+  }
+
   constructor(
     private apiService: ApiService,
     private locationService: LocationService,

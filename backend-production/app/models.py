@@ -36,7 +36,7 @@ class Restaurant(BaseModel):
     address: str
     distance: float
     rating: float
-    priceLevel: int = Field(ge=1, le=4)
+    priceLevel: Optional[int] = Field(ge=1, le=4)
     cuisine: List[str]
     phone: Optional[str] = None
     website: Optional[str] = None
