@@ -231,20 +231,20 @@ def get_pizza_recommendations(search_request: SearchRequest):
                 for place in places
             ]
             
-            # Sort by rating (descending) and take top 7
+            # Sort by rating (descending) and take top 12 (increased from 7 for more variety)
             restaurants_sorted = sorted(restaurants, key=lambda x: (-x.rating, x.distance))
-            top_7_restaurants = restaurants_sorted[:7]
+            top_candidates = restaurants_sorted[:12]
             
-            logger.info(f"Selected top 7 restaurants by rating from {len(restaurants)} total")
+            logger.info(f"Selected top 12 restaurants by rating from {len(restaurants)} total")
             
-            # Select 3 random restaurants from the top 7
+            # Select 3 random restaurants from the top candidates
             # If we have fewer than 3, just take all of them
-            if len(top_7_restaurants) <= 3:
-                ranked_restaurants = top_7_restaurants
+            if len(top_candidates) <= 3:
+                ranked_restaurants = top_candidates
             else:
-                ranked_restaurants = random.sample(top_7_restaurants, 3)
+                ranked_restaurants = random.sample(top_candidates, 3)
             
-            logger.info(f"Randomly selected {len(ranked_restaurants)} restaurants from top 7")
+            logger.info(f"Randomly selected {len(ranked_restaurants)} restaurants from top candidates")
             
             # Note: We no longer rank with Gemini here to avoid timeouts/errors.
             # Focused summaries will be generated on demand via /summary endpoint.
