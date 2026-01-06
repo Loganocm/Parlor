@@ -11,15 +11,11 @@
 }
 
 .title {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 0.75rem;
-  background: linear-gradient(135deg, #d84315 0%, #ff6f00 50%, #d84315 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 2px 10px rgba(216, 67, 21, 0.2);
+  margin-bottom: 0.5rem;
+  color: #d84315;
   letter-spacing: -1px;
 }
 
@@ -43,135 +39,113 @@
 .search-bar {
   display: flex;
   align-items: center;
-  background: linear-gradient(145deg, #ffffff 0%, #fff8f0 100%);
-  border: 3px solid #ffccbc;
-  border-radius: 60px;
-  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border-radius: 40px;
+  padding: 0.5rem;
   width: 100%;
   max-width: 850px;
-  box-shadow: 
-    0 8px 32px rgba(216, 67, 21, 0.15),
-    0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease;
   position: static;
-}
-
-.search-bar::before {
-  content: '';
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  background: linear-gradient(135deg, #ff6f00, #d84315, #ff6f00);
-  border-radius: 60px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
+  gap: 0.5rem;
 }
 
 .search-bar:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 48px rgba(216, 67, 21, 0.25),
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .search-bar:focus-within {
-  border-color: #ff6f00;
-  box-shadow: 
-    0 12px 48px rgba(255, 111, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 0 0 4px rgba(255, 111, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .search-section {
   display: flex;
   align-items: center;
-  gap: 0.875rem;
-  padding: 0.5rem 1rem;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 30px;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.search-section:hover {
+  background-color: #f5f5f5;
+}
+
+.search-section:focus-within {
+  background-color: #f5f5f5;
 }
 
 .location-section {
-  flex: 1;
+  flex: 1.5;
   min-width: 0;
-  position: static;
+  position: relative;
+  cursor: text;
 }
 
 .location-section .section-content {
   flex: 1;
+  position: relative;
+  z-index: 1;
+  overflow: visible; /* Ensure dropdown isn't clipped */
 }
 
 .distance-section,
 .dietary-section {
   flex-shrink: 0;
-  min-width: 120px;
+  min-width: 100px;
+  cursor: pointer;
 }
 
 .section-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  display: none;
 }
 
 .section-content {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.1rem;
   min-width: 0;
+  justify-content: center;
 }
 
 .section-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: #8d6e63;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+  color: #424242;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 
 .search-input {
   border: none;
   outline: none;
-  font-size: 1.05rem;
-  color: #3e2723;
+  font-size: 1rem;
+  color: #212121;
   background: transparent;
   width: 100%;
   min-width: 0;
   font-weight: 500;
-  position: static;
-}
-
-/* Style container for PlaceAutocompleteElement */
-.place-picker-container {
-  width: 100%;
-  min-width: 0;
-}
-
-/* Style for Google PlaceAutocompleteElement */
-gmp-place-autocomplete {
-  border: none;
-  outline: none;
-  font-size: 1.05rem;
-  background: transparent;
-  width: 100%;
-  min-width: 0;
-  font-weight: 500;
-  display: block;
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  margin: 0;
+  height: 24px;
+  line-height: 24px;
+  font-family: inherit;
 }
 
 .search-input::placeholder {
-  color: #bcaaa4;
+  color: #9e9e9e;
   font-weight: 400;
 }
 
 .search-select {
   border: none;
   outline: none;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #3e2723;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #212121;
   background: transparent;
   cursor: pointer;
   padding: 0.25rem 0;
@@ -184,9 +158,9 @@ gmp-place-autocomplete {
 .filter-dropdown {
   border: none;
   outline: none;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #3e2723;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #212121;
   background: transparent;
   cursor: pointer;
   padding: 0.25rem 0;
@@ -198,95 +172,63 @@ gmp-place-autocomplete {
   color: #d84315;
 }
 
-.divider {
-  width: 2px;
-  height: 40px;
-  background: linear-gradient(to bottom, transparent, #ffccbc 20%, #ffccbc 80%, transparent);
-  flex-shrink: 0;
-}
-
 .search-action-btn {
-  background: linear-gradient(135deg, #ff6f00 0%, #d84315 100%);
+  background: #d84315;
   border: none;
   border-radius: 50%;
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   flex-shrink: 0;
-  box-shadow: 
-    0 4px 12px rgba(216, 67, 21, 0.4),
-    0 2px 4px rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.search-action-btn::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.search-action-btn:hover:not(:disabled)::before {
-  width: 100px;
-  height: 100px;
+  margin-left: auto;
+  box-shadow: 0 4px 12px rgba(216, 67, 21, 0.2);
 }
 
 .search-action-btn:hover:not(:disabled) {
-  transform: scale(1.08) rotate(5deg);
-  box-shadow: 
-    0 6px 20px rgba(216, 67, 21, 0.5),
-    0 3px 8px rgba(0, 0, 0, 0.25);
+  background: #bf360c;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(216, 67, 21, 0.3);
 }
 
 .search-action-btn:active:not(:disabled) {
-  transform: scale(0.95) rotate(0deg);
+  transform: scale(0.95);
 }
 
 .search-action-btn:disabled {
-  opacity: 0.5;
+  background: #e0e0e0;
   cursor: not-allowed;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
 }
 
 .search-icon {
-  font-size: 1.4rem;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-  position: relative;
-  z-index: 1;
+  font-size: 1.2rem;
+  color: white;
 }
 
 .current-location-link {
-  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-  border: 2px solid #ffccbc;
+  background: white;
+  border: 1px solid #e0e0e0;
   color: #d84315;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  padding: 0.75rem 1.75rem;
-  border-radius: 30px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(216, 67, 21, 0.15);
+  padding: 0.5rem 1.25rem;
+  border-radius: 20px;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Added subtle shadow for depth */
 }
 
 .current-location-link:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ffe0b2 0%, #ffccbc 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(216, 67, 21, 0.25);
-  border-color: #ff6f00;
+  background: #fff3e0;
+  border-color: #d84315;
+  transform: translateY(-1px);
 }
 
 .current-location-link:active:not(:disabled) {
@@ -302,32 +244,45 @@ gmp-place-autocomplete {
   font-size: 1.1rem;
 }
 
-.dietary-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
+.dietary-backdrop {
+  position: fixed;
+  top: 0;
   left: 0;
-  margin: 0.5rem auto;
-  max-width: 400px;
-  background: linear-gradient(145deg, #ffffff 0%, #fff8f0 100%);
-  border: 3px solid #ffccbc;
-  border-radius: 20px;
-  box-shadow: 
-    0 12px 48px rgba(216, 67, 21, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9990;
+  background: transparent;
+  cursor: default;
 }
 
-@keyframes slideDown {
+.dietary-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  margin: 0;
+  max-width: none;
+  background: linear-gradient(145deg, #ffffff 0%, #fffbf7 100%);
+  border: 2px solid #ffe0b2;
+  border-radius: 24px;
+  box-shadow: 
+    0 12px 36px rgba(216, 67, 21, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+  z-index: 9999;
+  animation: dropdownEnter 0.2s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+  overflow: hidden;
+  transform-origin: top center;
+}
+
+@keyframes dropdownEnter {
   from {
     opacity: 0;
-    transform: translateY(-20px) scale(0.95);
+    transform: translateX(-50%) scale(0.95) translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateX(-50%) scale(1) translateY(0);
   }
 }
 
@@ -335,7 +290,7 @@ gmp-place-autocomplete {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
   background: linear-gradient(135deg, #ff6f00 0%, #d84315 100%);
   border-bottom: none;
 }
@@ -455,7 +410,164 @@ gmp-place-autocomplete {
   }
 
   .dietary-dropdown {
-    max-width: calc(100% - 2rem);
-    margin: 0.5rem 1rem;
+    width: calc(100% - 2rem);
+    margin: 0;
+    left: 50%;
+    transform: translateX(-50%);
   }
+}
+
+/* Custom Predictions Dropdown */
+.predictions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  margin-top: 0.5rem;
+  z-index: 9999; /* Force high z-index */
+  overflow: hidden;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  border: 1px solid #f0f0f0; /* Ensure visibility against white bg */
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background: transparent;
+  cursor: default;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.prediction-item:hover,
+.prediction-item.active {
+  background-color: #f5f5f5;
+}
+
+.prediction-icon {
+  font-size: 1.1rem;
+  opacity: 0.6;
+}
+
+.prediction-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  overflow: hidden;
+}
+
+.prediction-main {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #212121;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prediction-secondary {
+  font-size: 0.8rem;
+  color: #757575;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Scrollbar styling for dropdown */
+.predictions-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.predictions-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.predictions-dropdown::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.predictions-dropdown::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.error-item {
+  cursor: default;
+  background-color: #fff0f0;
+}
+
+.error-item:hover {
+  background-color: #fff0f0;
+}
+
+.error-item .prediction-main {
+  color: #d32f2f;
+}
+
+.error-item .prediction-secondary {
+  color: #d32f2f;
+  white-space: normal; /* Allow error text to wrap */
+}
+
+/* Custom styling for the Google Maps Web Component to match Parlor design */
+.custom-gmp-input {
+  width: 100%;
+  --gmp-px-color-surface: transparent;
+  --gmp-px-color-on-surface: #212121;
+  --gmp-px-font-family-base: inherit;
+  --gmp-px-font-size-base: 1rem;
+  --gmp-px-line-height-base: 24px;
+  
+  /* Hide the default border/background of the component */
+  border: none;
+  background: transparent;
+}
+
+/* Hide the internal input border/background */
+.custom-gmp-input::part(input) {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font-weight: 500;
+  color: #212121;
+  outline: none;
+}
+
+/* Style the dropdown to match our previous custom design */
+.custom-gmp-input::part(list) {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  margin-top: 0.5rem;
+  border: 1px solid #f0f0f0;
+  padding: 0.5rem 0;
+}
+
+.custom-gmp-input::part(item) {
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  color: #212121;
+}
+
+.custom-gmp-input::part(item):hover {
+  background-color: #f5f5f5;
 }

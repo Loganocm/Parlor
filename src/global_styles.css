@@ -5,8 +5,10 @@
 }
 
 html, body {
-  overflow: hidden;
-  height: 100%;
+  overflow-y: auto; /* Allow vertical scroll */
+  overflow-x: hidden;
+  height: auto; /* Let content dictate height */
+  min-height: 100%;
   width: 100%;
 }
 
@@ -16,6 +18,8 @@ body {
   color: #2c3e50;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-attachment: fixed; /* Prevents gradient break on scroll */
 }
 
 /* Hide scrollbars completely */

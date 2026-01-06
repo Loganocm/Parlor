@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit, CUSTOM_ELEMENTS_SCHEMA, NgZone, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { LocationService } from '../../services/location.service';
 import { SearchRequest, UserPreferences } from '../../models/restaurant.model';
@@ -15,15 +17,24 @@ declare var google: any;
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements AfterViewInit {
+export class SearchComponent implements AfterViewInit, OnInit, OnDestroy {
   @Output() onSearch = new EventEmitter<SearchRequest>();
-  @ViewChild('placePickerContainer') placePickerContainer!: ElementRef;
+  @ViewChild('placeInput') placeInput!: ElementRef;
 
   address: string = '';
   loading: boolean = false;
   showDietaryDropdown: boolean = false;
+  predictions: any[] = [];
+  showPredictions: boolean = false;
+  activePredictionIndex: number = -1;
+  errorMessage: string = '';
+  
   private selectedPlace: any = null;
-  private placeAutocompleteElement: any = null;
+  private autocompleteService: any = null;
+  private placesService: any = null;
+  private sessionToken: any = null;
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
 
   preferences: UserPreferences = {
     maxDistance: 10,
@@ -40,106 +51,154 @@ export class SearchComponent implements AfterViewInit {
 
   constructor(
     private apiService: ApiService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private ngZone: NgZone
   ) {}
 
-  ngAfterViewInit() {
-    // Wait for Google Maps to be ready
-    this.waitForGoogleMaps();
+  ngOnInit() {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.fetchPredictions(query);
+    });
+
+    // Global handler for Google Maps authentication failures
+    (window as any).gm_authFailure = () => {
+      console.error('🔥 Google Maps Auth Failure Detected');
+      this.ngZone.run(() => {
+        this.errorMessage = 'Error: Enable "Places API" (Legacy) in Google Cloud Console. You likely only have "Places API (New)" enabled.';
+        this.showPredictions = true;
+      });
+    };
   }
 
-  waitForGoogleMaps() {
-    if ((window as any).googleMapsLoaded && typeof google !== 'undefined' && google.maps && google.maps.places) {
-      setTimeout(() => this.initPlaceAutocomplete(), 100);
-    } else {
-      setTimeout(() => this.waitForGoogleMaps(), 500);
+  ngOnDestroy() {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
     }
   }
 
-  async initPlaceAutocomplete() {
-    try {
-      console.log('🔧 Creating PlaceAutocompleteElement');
-      
-      // Import the Places library to get PlaceAutocompleteElement
-      const { PlaceAutocompleteElement } = await google.maps.importLibrary("places") as any;
-      
-      // Create the element programmatically
-      this.placeAutocompleteElement = new PlaceAutocompleteElement();
-      this.placeAutocompleteElement.setAttribute('placeholder', 'Enter your address...');
-      
-      // Append it to the container
-      this.placePickerContainer.nativeElement.appendChild(this.placeAutocompleteElement);
-      
-      console.log('✅ PlaceAutocompleteElement created and appended');
-      
-      // Listen for place selection - CORRECT event is 'gmp-select' not 'gmp-placeselect'
-      // The event provides 'placePrediction' which must be converted to a place with .toPlace()
-      this.placeAutocompleteElement.addEventListener('gmp-select', async ({ placePrediction }: any) => {
-        console.log('🎯 gmp-select EVENT FIRED!');
-        
-        // Convert prediction to place object
-        const place = placePrediction.toPlace();
-        console.log('📦 Step 1: Place object created from prediction:', place);
+  ngAfterViewInit() {
+    // No longer needed for backend proxy
+  }
 
-        console.log('🔄 Step 2: Fetching place fields...');
-        // Fetch the fields we need
-        await place.fetchFields({
-          fields: ['displayName', 'formattedAddress', 'location']
+  // Removed waitForGoogleMaps and initAutocompleteService
+
+  onInputChange() {
+    console.log('📝 Input changed:', this.address);
+    this.searchSubject.next(this.address);
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (!this.showPredictions || this.predictions.length === 0) return;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.activePredictionIndex = (this.activePredictionIndex + 1) % this.predictions.length;
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.activePredictionIndex = (this.activePredictionIndex - 1 + this.predictions.length) % this.predictions.length;
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (this.activePredictionIndex >= 0) {
+        this.selectPrediction(this.predictions[this.activePredictionIndex]);
+      }
+    } else if (event.key === 'Escape') {
+      this.showPredictions = false;
+    }
+  }
+
+  fetchPredictions(query: string) {
+    this.errorMessage = ''; 
+
+    if (!query || query.length < 3) {
+      this.predictions = [];
+      this.showPredictions = false;
+      return;
+    }
+
+    console.log('📤 Fetching predictions via Backend Proxy for:', query);
+    
+    this.apiService.getAutocompletePredictions(query, this.sessionToken).subscribe({
+      next: (predictions) => {
+        this.ngZone.run(() => {
+          console.log('✅ Predictions received:', predictions.length);
+          this.predictions = predictions;
+          this.showPredictions = predictions.length > 0;
+          this.activePredictionIndex = -1;
         });
-        console.log('✅ Step 3: Place fields fetched successfully');
-        
-        console.log('💾 Step 4: Updating component state...');
-        this.selectedPlace = place;
-        console.log('  - this.selectedPlace =', this.selectedPlace);
-        
-        this.address = place.formattedAddress || place.displayName || '';
-        console.log('  - this.address =', this.address);
-        
-        console.log('✅ Place selected:', this.address);
-        console.log('📍 Location:', place.location);
-        
-        // Automatically trigger search after selection
-        if (this.address && place.location) {
-          console.log('🔢 Step 5: Extracting coordinates...');
-          // Check if lat/lng are methods or properties
-          const lat = typeof place.location.lat === 'function' ? place.location.lat() : place.location.lat;
-          const lng = typeof place.location.lng === 'function' ? place.location.lng() : place.location.lng;
-          console.log('  - latitude:', lat);
-          console.log('  - longitude:', lng);
-          console.log('🚀 AUTO-TRIGGERING SEARCH with coordinates:', lat, lng);
-          
-          console.log('⏳ Step 6: Setting loading state...');
-          this.loading = true;
-          console.log('  - this.loading =', this.loading);
-          
-          console.log('📦 Step 7: Creating search request...');
-          const searchRequest: SearchRequest = {
-            address: this.address,
-            latitude: lat,
-            longitude: lng,
-            preferences: this.preferences
-          };
-          console.log('📤 Auto-search request:', searchRequest);
-          
-          console.log('🚀 Step 8: Executing performSearch()...');
-          this.performSearch(searchRequest);
-        } else {
-          console.error('❌ Missing address or location after place select');
-        }
-      });
+      },
+      error: (err) => {
+        console.error('❌ Backend Autocomplete Error:', err);
+        this.ngZone.run(() => {
+           // Don't show error to user for autocomplete failures, just hide dropdown
+           this.predictions = [];
+        });
+      }
+    });
+  }
 
-      console.log('✅ PlaceAutocompleteElement listeners added');
-    } catch (error) {
-      console.error('❌ Error initializing PlaceAutocompleteElement:', error);
+  selectPrediction(prediction: any) {
+    this.address = prediction.description;
+    this.showPredictions = false;
+    
+    console.log('📍 Fetching details for:', prediction.place_id);
+    
+    this.apiService.getGooglePlaceDetails(prediction.place_id).subscribe({
+      next: (place) => {
+         this.ngZone.run(() => {
+           this.handlePlaceSelection(place);
+           this.sessionToken = crypto.randomUUID();
+         });
+      },
+      error: (err) => {
+         console.error('❌ Place Details Error:', err);
+         alert('Failed to get location details.');
+      }
+    });
+  }
+
+  closePredictions() {
+    setTimeout(() => {
+      this.showPredictions = false;
+    }, 200);
+  }
+
+  handlePlaceSelection(place: any) {
+    console.log('💾 Updating component state...');
+    this.selectedPlace = place;
+    
+    // Handle Google Places API (New) response format
+    // It returns { location: { latitude: 123, longitude: 456 }, formattedAddress: "..." }
+    const lat = place.location?.latitude;
+    const lng = place.location?.longitude;
+    const address = place.formattedAddress;
+
+    console.log('✅ Place selected:', address);
+    console.log('📍 Location:', lat, lng);
+    
+    if (lat && lng) {
+      console.log('🚀 AUTO-TRIGGERING SEARCH with coordinates:', lat, lng);
+      this.loading = true;
+      
+      const searchRequest: SearchRequest = {
+        address: address || this.address,
+        latitude: lat,
+        longitude: lng,
+        preferences: this.preferences
+      };
+      
+      this.performSearch(searchRequest);
+    } else {
+      console.error('❌ Missing location data in place details:', place);
+      alert('Could not retrieve location coordinates for this place.');
     }
   }
 
   // Helper method to get the current input value
-  // NOTE: PlaceAutocompleteElement does NOT expose input value
-  // This will always return empty - keeping for compatibility
   getInputValue(): string {
-    // Cannot access input from PlaceAutocompleteElement
-    return '';
+    return this.address;
   }
 
   useCurrentLocation() {
@@ -220,10 +279,6 @@ export class SearchComponent implements AfterViewInit {
     });
   }
 
-  private performSearch(searchRequest: SearchRequest) {
-    this.loading = false;
-    this.onSearch.emit(searchRequest);
-  }
 
   toggleDietaryDropdown() {
     this.showDietaryDropdown = !this.showDietaryDropdown;
@@ -240,5 +295,27 @@ export class SearchComponent implements AfterViewInit {
 
   isDietaryRestrictionSelected(restriction: string): boolean {
     return this.preferences.dietaryRestrictions.includes(restriction);
+  }
+
+  private updateLoadingMessage() {
+    // Message handling moved to main.ts for better coordination with API states
+  }
+
+  private performSearch(searchRequest: SearchRequest) {
+    // Start the message cycle
+    this.updateLoadingMessage();
+    
+    // We don't set this.loading = false here because the parent component handles the actual API call
+    // and sets its own loading state.
+    // However, looking at previous code, this component just emits onSearch.
+    
+    this.onSearch.emit(searchRequest);
+    
+    // IMPORTANT: Reset loading state locally after a short delay so the user can search again if needed.
+    // In a real app, the parent should tell us when the search is done.
+    // But for now, we unlock the input after 1 second so the user isn't stuck.
+    setTimeout(() => {
+        this.loading = false;
+    }, 1000);
   }
 }

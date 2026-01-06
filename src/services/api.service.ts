@@ -42,6 +42,18 @@ export class ApiService {
     );
   }
 
+  getAutocompletePredictions(input: string, sessionToken?: string): Observable<any[]> {
+    let params = new HttpParams().set('input', input);
+    if (sessionToken) {
+      params = params.set('session_token', sessionToken);
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/places/autocomplete`, { params });
+  }
+
+  getGooglePlaceDetails(placeId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/places/details/${placeId}`);
+  }
+
   recordUserChoice(choice: UserChoice): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/user/choices`, choice);
   }

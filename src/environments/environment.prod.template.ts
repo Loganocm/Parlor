@@ -3,5 +3,5 @@ export const environment = {
   production: true,
   // Cloudflare Tunnel HTTPS to deployed EC2 backend
   apiUrl: 'https://divine-donald-believed-gardens.trycloudflare.com/api',
-  googleMapsApiKey: 'AIzaSyBs37kBNIaTxZ3DRBe8pyTABKhEfY_YqFQ'
+  googleMapsApiKey: 'GOOGLE_MAPS_API_KEY_PLACEHOLDER'
 };

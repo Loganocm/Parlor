@@ -11,6 +11,8 @@ export interface Restaurant {
   openNow?: boolean;
   latitude: number;
   longitude: number;
+  photoUrl?: string;
+  aiSummary?: AIGeneratedSummary;
 }
 
 export interface UserPreferences {

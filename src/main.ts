@@ -4,8 +4,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { SearchComponent } from './components/search/search.component';
 import { ResultsComponent } from './components/results/results.component';
-import { Restaurant, SearchRequest } from './models/restaurant.model';
+import { Restaurant, SearchRequest, AIGeneratedSummary } from './models/restaurant.model';
 import { ApiService } from './services/api.service';
+import { environment } from './environments/environment';
+import { forkJoin, of, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +21,7 @@ import { ApiService } from './services/api.service';
       <div class="loading-overlay" *ngIf="loading">
         <div class="loading-spinner">
           <div class="pizza-spinner">🍕</div>
-          <p class="loading-text">Finding the perfect pizza spots...</p>
+          <p class="loading-text">{{ loadingMessage }}</p>
         </div>
       </div>
 
@@ -32,7 +35,8 @@ import { ApiService } from './services/api.service';
   styles: [`
     .app-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      display: flex;
+      flex-direction: column;
     }
 
     .loading-overlay {
@@ -91,26 +95,121 @@ export class App {
   restaurants: Restaurant[] = [];
   lastSearchRequest: SearchRequest | null = null;
   loading: boolean = false;
+  loadingMessage: string = 'Finding the perfect pizza spots...';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {
+    this.loadGoogleMaps();
+  }
+
+  loadGoogleMaps() {
+    if ((window as any).googleMapsLoaded) return;
+
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&libraries=places&loading=async&callback=initGoogleMaps`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
 
   handleSearch(searchRequest: SearchRequest) {
     this.lastSearchRequest = searchRequest;
     this.loading = true;
+    this.loadingMessage = 'Finding the perfect pizza spots...';
     this.restaurants = []; // Clear previous results
+    
+    // Animate messages while searching
+    const messageInterval = this.startMessageCycle();
     
     this.apiService.getPizzaRecommendations(searchRequest).subscribe({
       next: (results: Restaurant[]) => {
-        this.restaurants = results;
-        this.loading = false;
+        // Recommendations found, now fetch metadata
+        this.loadingMessage = 'Gathering photos and getting AI summaries...';
+        
+        const tasks: Observable<any>[] = [];
+
+        // 1. Fetch AI Summaries
+        const summaryTasks = results.map(r => 
+          this.apiService.getAISummary(r.id).pipe(
+            map(summary => {
+              r.aiSummary = summary;
+              return summary;
+            }),
+            catchError(err => of(null)) // Continue even if summary fails
+          )
+        );
+        tasks.push(...summaryTasks);
+
+        // 2. Preload Images
+        const imageTasks = results.map(r => 
+          new Observable<boolean>(observer => {
+            if (!r.photoUrl) {
+              observer.next(true);
+              observer.complete();
+              return;
+            }
+            const img = new Image();
+            img.onload = () => {
+              console.log(`✅ Image loaded for ${r.name}`);
+              observer.next(true);
+              observer.complete();
+            };
+            img.onerror = () => {
+              console.warn(`❌ Failed to load image for ${r.name}`);
+              observer.next(false);
+              observer.complete();
+            };
+            img.src = 'http://localhost:8000' + r.photoUrl;
+          })
+        );
+        tasks.push(...imageTasks);
+        
+        this.loadingMessage = 'Finalizing your personalized menu...';
+
+        console.log(`⏳ Waiting for ${tasks.length} tasks to complete...`);
+
+        // Wait for ALL tasks (summaries + images) to complete
+        forkJoin(tasks).subscribe({
+            next: () => {
+                console.log('✅ All data and media loaded!');
+                clearInterval(messageInterval);
+                this.loadingMessage = 'Almost ready...';
+                
+                // Final delay to ensure smooth transition
+                setTimeout(() => {
+                    this.restaurants = results;
+                    this.loading = false;
+                }, 1500); 
+            }
+        });
       },
       error: (error: any) => {
+        clearInterval(messageInterval);
         console.error('Error fetching restaurants:', error);
         alert('Error: ' + (error.error?.detail || 'Unable to fetch recommendations. Please try again.'));
         this.restaurants = [];
         this.loading = false;
       }
     });
+  }
+
+  private startMessageCycle(): any {
+    const messages = [
+      "Finding the perfect pizza spots...",
+      "Analyzing recent reviews...",
+      "Comparing crust thickness...",
+      "Measuring cheese stretch..."
+    ];
+    let index = 0;
+    
+    return setInterval(() => {
+        index = (index + 1) % messages.length;
+        // Only update if we are still in the finding phase
+        if (this.loadingMessage !== 'Gathering photos and getting AI summaries...' && 
+            this.loadingMessage !== 'Finalizing your personalized menu...' &&
+            this.loadingMessage !== 'Almost ready...') {
+             this.loadingMessage = messages[index];
+        }
+    }, 1500);
   }
 }
 

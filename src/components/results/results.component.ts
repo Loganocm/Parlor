@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Restaurant, AIGeneratedSummary, SearchRequest } from '../../models/restaurant.model';
 import { ApiService } from '../../services/api.service';
@@ -10,7 +10,7 @@ import { ApiService } from '../../services/api.service';
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.css']
 })
-export class ResultsComponent {
+export class ResultsComponent implements OnChanges {
   @Input() restaurants: Restaurant[] = [];
   @Input() lastSearchRequest: SearchRequest | null = null;
   @Output() onReroll = new EventEmitter<SearchRequest>();
@@ -22,9 +22,39 @@ export class ResultsComponent {
 
   constructor(private apiService: ApiService) {}
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['restaurants'] && this.restaurants && this.restaurants.length > 0) {
+      // Logic moved to main.ts to support loading overlay
+    }
+  }
+
+  preloadSummaries() {
+    console.log('🔄 Preloading AI summaries in background...');
+    this.restaurants.forEach(restaurant => {
+      if (!restaurant.aiSummary) {
+        this.apiService.getAISummary(restaurant.id).subscribe({
+          next: (summary) => {
+            console.log(`✅ Summary loaded for ${restaurant.name}`);
+            restaurant.aiSummary = summary;
+          },
+          error: (error) => {
+            console.error(`❌ Error loading summary for ${restaurant.name}:`, error);
+          }
+        });
+      }
+    });
+  }
+
   selectRestaurant(restaurant: Restaurant) {
     this.selectedRestaurant = restaurant;
-    this.loadAISummary(restaurant.id);
+    
+    // Use pre-generated summary if available
+    if (restaurant.aiSummary) {
+      this.aiSummary = restaurant.aiSummary;
+      this.loadingSummary = false;
+    } else {
+      this.loadAISummary(restaurant.id);
+    }
   }
 
   closeDetails() {

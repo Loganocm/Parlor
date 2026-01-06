@@ -9,13 +9,34 @@
         <div class="section-icon">📍</div>
         <div class="section-content">
           <label class="section-label">Where to?</label>
-          <div #placePickerContainer class="place-picker-container"></div>
+          
+          <input 
+            #placeInput
+            type="text" 
+            class="search-input" 
+            [(ngModel)]="address" 
+            (ngModelChange)="onInputChange()"
+            (keydown)="onKeydown($event)"
+            placeholder="Search destinations"
+          >
+          
+          <!-- Custom Predictions Dropdown -->
+          <div class="predictions-dropdown" *ngIf="showPredictions && predictions.length > 0">
+            <div 
+              class="prediction-item" 
+              *ngFor="let prediction of predictions; let i = index"
+              [class.active]="i === activePredictionIndex"
+              (click)="selectPrediction(prediction)">
+              <span class="prediction-icon">📍</span>
+              <div class="prediction-text">
+                <span class="prediction-main">{{ prediction.main_text || prediction.description }}</span>
+                <span class="prediction-secondary">{{ prediction.secondary_text }}</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-
-      <div class="divider"></div>
-
-      <div class="divider"></div>
 
       <div class="search-section distance-section">
         <div class="section-content">
@@ -30,14 +51,34 @@
         </div>
       </div>
 
-      <div class="divider"></div>
-
       <div class="search-section dietary-section">
         <div class="section-content">
           <label class="section-label">Dietary</label>
           <button class="filter-dropdown" (click)="toggleDietaryDropdown()">
             {{ selectedDietaryCount > 0 ? selectedDietaryCount + ' selected' : 'Any' }}
           </button>
+        </div>
+
+        <div class="dietary-backdrop" *ngIf="showDietaryDropdown" (click)="toggleDietaryDropdown()"></div>
+
+        <div class="dietary-dropdown" *ngIf="showDietaryDropdown">
+          <div class="dropdown-header">
+            <h4>Dietary Restrictions</h4>
+            <button class="close-dropdown" (click)="toggleDietaryDropdown()">✕</button>
+          </div>
+          <div class="dietary-options">
+            <label
+              *ngFor="let restriction of availableDietaryRestrictions"
+              class="dietary-checkbox"
+            >
+              <input
+                type="checkbox"
+                [checked]="isDietaryRestrictionSelected(restriction)"
+                (change)="toggleDietaryRestriction(restriction)"
+              />
+              <span>{{ restriction }}</span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -49,25 +90,5 @@
     <button class="current-location-link" (click)="useCurrentLocation()" [disabled]="loading">
       <span class="location-icon">📍</span> Use My Location
     </button>
-  </div>
-
-  <div class="dietary-dropdown" *ngIf="showDietaryDropdown">
-    <div class="dropdown-header">
-      <h4>Dietary Restrictions</h4>
-      <button class="close-dropdown" (click)="toggleDietaryDropdown()">✕</button>
-    </div>
-    <div class="dietary-options">
-      <label
-        *ngFor="let restriction of availableDietaryRestrictions"
-        class="dietary-checkbox"
-      >
-        <input
-          type="checkbox"
-          [checked]="isDietaryRestrictionSelected(restriction)"
-          (change)="toggleDietaryRestriction(restriction)"
-        />
-        <span>{{ restriction }}</span>
-      </label>
-    </div>
   </div>
 </div>
