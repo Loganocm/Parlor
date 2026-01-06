@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "Parlor-production-env.eba-mvxqukgp.us-west-2.elasticbeanstalk.com/api/:path*"
+      "destination": "http://parlor-production-env.eba-mvxqukgp.us-west-2.elasticbeanstalk.com/api/:path*"
     }
   ]
 }
