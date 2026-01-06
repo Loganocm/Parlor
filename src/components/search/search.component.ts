@@ -218,7 +218,17 @@ export class SearchComponent implements AfterViewInit, OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('❌ Error getting location:', error);
-        alert('Unable to get your location. Please enter an address manually.');
+        
+        let msg = 'Unable to get your location. Please enter an address manually.';
+        if (error.code === 1) {
+          msg = 'Location permission denied. Please allow access in browser settings.';
+        } else if (error.code === 2) {
+          msg = 'Location unavailable. Ensure GPS is on and try again.';
+        } else if (error.code === 3) {
+           msg = 'Location request timed out. Please try again.';
+        }
+
+        alert(msg);
         this.loading = false;
       }
     });
