@@ -158,7 +158,7 @@ export class App {
               observer.next(false);
               observer.complete();
             };
-            img.src = 'http://localhost:8000' + r.photoUrl;
+            img.src = r.photoUrl;
           })
         );
         tasks.push(...imageTasks);
