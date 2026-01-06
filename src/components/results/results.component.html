@@ -15,7 +15,7 @@
           
           <div class="card-image">
             <div class="pizza-icon" *ngIf="!restaurant.photoUrl">🍕</div>
-            <img *ngIf="restaurant.photoUrl" [src]="'http://localhost:8000' + restaurant.photoUrl" alt="Restaurant Photo" class="restaurant-photo">
+            <img *ngIf="restaurant.photoUrl" [src]="restaurant.photoUrl" alt="Restaurant Photo" class="restaurant-photo">
           </div>
           
           <h3 class="card-title">{{ restaurant.name }}</h3>

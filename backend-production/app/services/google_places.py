@@ -381,7 +381,7 @@ class GooglePlacesService:
             photo_name = photos[0].get('name')
             if photo_name:
                 # Use our proxy endpoint to avoid exposing API key
-                photo_url = f"/api/media/{photo_name}"
+                photo_url = f"{settings.BASE_URL}/api/media/{photo_name}"
 
         return Restaurant(
             id=place_id,

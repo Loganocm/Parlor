@@ -10,8 +10,7 @@ class Settings:
     """Application settings and configuration"""
     
     # API Keys
-
-    BASE_URL: str = os.getenv("BASE_URL") or "http://localhost:8000"
+    
     class Config:
         env_file = ".env"
 
