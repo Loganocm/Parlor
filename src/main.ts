@@ -19,7 +19,7 @@ import { catchError, map } from 'rxjs/operators';
     <div class="landing-container" *ngIf="!started">
       <div class="landing-content">
         <h1>🍕 Parlor</h1>
-        <p>Your AI-powered Pizza Finder</p>
+        <p>Find your next pizza adventure with AI-powered summaries!</p>
         <button (click)="started = true" class="start-btn">Start</button>
       </div>
     </div>
