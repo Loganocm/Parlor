@@ -132,7 +132,8 @@ class GooglePlacesService:
         longitude: float,
         radius_miles: float = 10.0,
         min_rating: float = 3.0,
-        max_results: int = 20
+        max_results: int = 20,
+        dietary_restrictions: Optional[List[str]] = None
     ) -> List[Dict]:
         """
         Search for pizza restaurants near a location.
@@ -146,6 +147,7 @@ class GooglePlacesService:
             radius_miles: Search radius in miles (default: 10.0)
             min_rating: Minimum rating filter (default: 3.0)
             max_results: Maximum number of results (default: 20, max: 20)
+            dietary_restrictions: List of dietary restrictions (e.g., ["Vegan", "Gluten-Free"])
             
         Returns:
             List[Dict]: List of place dictionaries from the API
@@ -158,9 +160,18 @@ class GooglePlacesService:
         # Convert miles to meters for the location bias
         radius_meters = int(radius_miles * 1609.34)
         
+        # Construct text query dynamically
+        base_query = "pizza restaurant"
+        if dietary_restrictions and len(dietary_restrictions) > 0:
+            # e.g., "Vegan Gluten-Free pizza restaurant"
+            modifiers = " ".join(dietary_restrictions)
+            text_query = f"{modifiers} {base_query}"
+        else:
+            text_query = base_query
+        
         # Build request body
         request_body = {
-            "textQuery": "pizza restaurant",
+            "textQuery": text_query,
             "locationBias": {
                 "circle": {
                     "center": {
@@ -174,6 +185,7 @@ class GooglePlacesService:
         }
         
         # Specify fields to return - using Essential SKU for faster responses
+        # Added places.types for cuisine identification
         field_mask = ",".join([
             "places.id",
             "places.displayName",
@@ -185,7 +197,8 @@ class GooglePlacesService:
             "places.websiteUri",
             "places.nationalPhoneNumber",
             "places.currentOpeningHours",
-            "places.photos"
+            "places.photos",
+            "places.types"
         ])
         
         headers = {
@@ -341,8 +354,13 @@ class GooglePlacesService:
         # Determine cuisine types
         cuisine = ['Pizza']
         types = place.get('types', [])
+        
         if 'italian_restaurant' in types:
             cuisine.append('Italian')
+        if 'vegan_restaurant' in types:
+            cuisine.append('Vegan')
+        if 'vegetarian_restaurant' in types:
+            cuisine.append('Vegetarian')
         
         # Get opening hours
         open_now = None

@@ -185,13 +185,15 @@ def get_pizza_recommendations(search_request: SearchRequest):
         # Extract search parameters
         max_distance = 10.0
         min_rating = 3.0
+        dietary_restrictions = []
         if search_request.preferences:
             max_distance = search_request.preferences.maxDistance
             min_rating = search_request.preferences.minRating
+            dietary_restrictions = search_request.preferences.dietaryRestrictions
         
         # Create a search key for caching based on location and preferences
         search_key = hashlib.md5(
-            f"{lat}_{lng}_{max_distance}_{min_rating}_{search_request.preferences}".encode()
+            f"{lat}_{lng}_{max_distance}_{min_rating}_{dietary_restrictions}".encode()
         ).hexdigest()
         
         # Check if we have cached results for this session
@@ -213,7 +215,8 @@ def get_pizza_recommendations(search_request: SearchRequest):
                 longitude=lng,
                 radius_miles=max_distance,
                 min_rating=min_rating,
-                max_results=20  # Get 20 to ensure we have enough after filtering
+                max_results=20,  # Get 20 to ensure we have enough after filtering
+                dietary_restrictions=dietary_restrictions
             )
             
             logger.info(f"Found {len(places)} pizza places")
