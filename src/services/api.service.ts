@@ -13,15 +13,15 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getPizzaRecommendations(searchRequest: SearchRequest): Observable<Restaurant[]> {
-    return this.http.post<Restaurant[]>(`${this.apiUrl}/pizza-recommendations`, searchRequest);
+    return this.http.post<Restaurant[]>(`${this.apiUrl}/api/pizza-recommendations`, searchRequest);
   }
 
   searchRestaurants(searchRequest: SearchRequest): Observable<Restaurant[]> {
-    return this.http.post<Restaurant[]>(`${this.apiUrl}/restaurants/search`, searchRequest);
+    return this.http.post<Restaurant[]>(`${this.apiUrl}/api/restaurants/search`, searchRequest);
   }
 
   getRestaurantDetails(id: string): Observable<Restaurant> {
-    return this.http.get<Restaurant>(`${this.apiUrl}/restaurants/${id}`);
+    return this.http.get<Restaurant>(`${this.apiUrl}/api/restaurants/${id}`);
   }
 
   getAISummary(restaurantId: string, preferences?: string[]): Observable<AIGeneratedSummary> {
@@ -30,14 +30,14 @@ export class ApiService {
       params = params.set('preferences', preferences.join(','));
     }
     return this.http.get<AIGeneratedSummary>(
-      `${this.apiUrl}/restaurants/${restaurantId}/summary`,
+      `${this.apiUrl}/api/restaurants/${restaurantId}/summary`,
       { params }
     );
   }
 
   geocodeAddress(address: string): Observable<{ latitude: number; longitude: number }> {
     return this.http.post<{ latitude: number; longitude: number }>(
-      `${this.apiUrl}/geocode`,
+      `${this.apiUrl}/api/geocode`,
       { address }
     );
   }
@@ -47,20 +47,20 @@ export class ApiService {
     if (sessionToken) {
       params = params.set('session_token', sessionToken);
     }
-    return this.http.get<any[]>(`${this.apiUrl}/places/autocomplete`, { params });
+    return this.http.get<any[]>(`${this.apiUrl}/api/places/autocomplete`, { params });
   }
 
   getGooglePlaceDetails(placeId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/places/details/${placeId}`);
+    return this.http.get<any>(`${this.apiUrl}/api/places/details/${placeId}`);
   }
 
   recordUserChoice(choice: UserChoice): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/user/choices`, choice);
+    return this.http.post<void>(`${this.apiUrl}/api/user/choices`, choice);
   }
 
   getUserPreferences(): Observable<{ dietaryRestrictions: string[]; favoriteStyles: string[] }> {
     return this.http.get<{ dietaryRestrictions: string[]; favoriteStyles: string[] }>(
-      `${this.apiUrl}/user/preferences`
+      `${this.apiUrl}/api/user/preferences`
     );
   }
 }
