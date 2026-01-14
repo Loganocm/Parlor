@@ -425,9 +425,12 @@
     border-bottom: 2px solid #ffccbc;
   }
   
-  .distance-section .section-content,
-  .dietary-section .section-content {
+  .section-content {
     align-items: center;
+  }
+
+  .distance-input {
+    width: 50%;
   }
   
   .filter-dropdown {
