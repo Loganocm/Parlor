@@ -19,7 +19,7 @@ export class LocationService {
         maximumAge: 0
       };
 
-      console.log('📍 Requesting location (Low Accuracy Mode)...');
+      console.log('📍 Requesting location...');
 
       navigator.geolocation.getCurrentPosition(
         (position) => {

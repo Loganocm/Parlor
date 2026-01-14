@@ -417,12 +417,21 @@
 
   .search-section {
     width: 100%;
-    padding: 0;
+    padding: 0 1rem;
   }
 
   .location-section {
     padding-bottom: 1rem;
     border-bottom: 2px solid #ffccbc;
+  }
+  
+  .distance-section .section-content,
+  .dietary-section .section-content {
+    align-items: center;
+  }
+  
+  .filter-dropdown {
+    text-align: center;
   }
 
   .divider {
